@@ -1,0 +1,63 @@
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useQuery } from "@tanstack/react-query";
+import { getAllProduct } from "../../api/product/getAllProduct";
+import { Button } from "@/components/ui/button";
+import { DeleteButton } from "./DeleteButton";
+
+export type ProductTableProps = {};
+
+export const ProductTable = (props: ProductTableProps) => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["all-products"],
+    queryFn: async () => {
+      try {
+        const products = await getAllProduct();
+        return products;
+      } catch (error) {
+        throw error;
+      }
+    },
+  });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error</div>;
+  }
+
+  const products = data;
+
+  if (!products || products.length === 0) {
+    return <div>No product found.</div>;
+  }
+
+  return (
+    <Table>
+      <TableCaption>All products</TableCaption>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-[100px]">Products</TableHead>
+          <TableHead className="text-center">Descriptions</TableHead>
+          <TableHead className="text-center">Prices</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {products.map((product) => (
+          <TableRow key={product.id}>
+            <TableCell className="font-medium">{product.name}</TableCell>
+            <TableCell>{product.description}</TableCell>
+            <TableCell>{product.price}</TableCell>
+            <TableCell>
+              <Button>Edit product</Button>
+            </TableCell>
+            <TableCell>
+              <DeleteButton productId={product.id || ""} />
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+};

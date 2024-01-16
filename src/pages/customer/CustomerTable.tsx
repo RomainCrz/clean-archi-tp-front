@@ -2,6 +2,8 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { useQuery } from "@tanstack/react-query";
 import { getAllCustomer } from "../../api/customer/getAllCustomer";
 import { Button } from "@/components/ui/button";
+import { DeleteButton } from "./DeleteButton";
+import { CreateInvoiceModal } from "../invoice/CreateInvoiceModal";
 
 export type CustomerTableProps = {};
 
@@ -38,9 +40,8 @@ export const CustomerTable = (props: CustomerTableProps) => {
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">Customers</TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Phone</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
+          <TableHead className="text-center">Email</TableHead>
+          <TableHead className="text-center">Phone</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -50,10 +51,13 @@ export const CustomerTable = (props: CustomerTableProps) => {
             <TableCell>{customer.email}</TableCell>
             <TableCell>{customer.phone}</TableCell>
             <TableCell>
-              <Button>Create Invoice</Button>
+              <CreateInvoiceModal customer={customer} />
             </TableCell>
             <TableCell>
               <Button>See Invoices</Button>
+            </TableCell>
+            <TableCell>
+              <DeleteButton customerId={customer.id || ""} />
             </TableCell>
           </TableRow>
         ))}
