@@ -4,6 +4,8 @@ import { getAllCustomer } from "../../api/customer/getAllCustomer";
 import { Button } from "@/components/ui/button";
 import { DeleteButton } from "./DeleteButton";
 import { CreateInvoiceModal } from "../invoice/CreateInvoiceModal";
+import { InvoiceDropDown } from "./InvoiceDropDown";
+import { AddOrUpdateCustomerButton } from "./AddOrUpdateCustomerButton";
 
 export type CustomerTableProps = {};
 
@@ -51,10 +53,10 @@ export const CustomerTable = (props: CustomerTableProps) => {
             <TableCell>{customer.email}</TableCell>
             <TableCell>{customer.phone}</TableCell>
             <TableCell>
-              <CreateInvoiceModal customer={customer} />
+              <AddOrUpdateCustomerButton isForEdit={true} customer={customer} />
             </TableCell>
             <TableCell>
-              <Button>See Invoices</Button>
+              <InvoiceDropDown customer={customer} />
             </TableCell>
             <TableCell>
               <DeleteButton customerId={customer.id || ""} />

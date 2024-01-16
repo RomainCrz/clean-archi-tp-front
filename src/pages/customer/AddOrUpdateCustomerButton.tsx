@@ -5,25 +5,30 @@ import { Label } from "@/components/ui/label";
 import { useCreateCustomer } from "./hooks/useCreateCustomer";
 import { SyntheticEvent, useState } from "react";
 import { Customer } from "schema/customerSchema";
+import { useUpdateCustomer } from "./hooks/useUpdateCustomer";
 
-export type AddCustomerButtonProps = {};
+export type AddCustomerButtonProps = {
+  isForEdit: boolean;
+  customer?: Customer;
+};
 
-export const AddCustomerButton = (props: AddCustomerButtonProps) => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [country, setCountry] = useState("");
-  const [zip, setZip] = useState("");
+export const AddOrUpdateCustomerButton = ({ isForEdit, customer }: AddCustomerButtonProps) => {
+  const [name, setName] = useState(customer?.name || "");
+  const [email, setEmail] = useState(customer?.email || "");
+  const [phone, setPhone] = useState(customer?.phone || "");
+  const [address, setAddress] = useState(customer?.address || "");
+  const [city, setCity] = useState(customer?.city || "");
+  const [state, setState] = useState(customer?.state || "");
+  const [country, setCountry] = useState(customer?.country || "");
+  const [zip, setZip] = useState(customer?.zip || "");
 
-  const { mutate, isPending } = useCreateCustomer();
+  const { mutate: creationMutate, isPending: isPendingCreation } = useCreateCustomer();
+  const { mutate: updateMutate, isPending: isPendingUpdate } = useUpdateCustomer();
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
 
-    const customer: Customer = {
+    const newCustomer: Customer = {
       name,
       email,
       phone,
@@ -33,17 +38,23 @@ export const AddCustomerButton = (props: AddCustomerButtonProps) => {
       country,
       zip,
     };
-    mutate(customer);
+
+    if (isForEdit) {
+      newCustomer.id = customer?.id || "";
+      updateMutate(newCustomer);
+    } else {
+      creationMutate(newCustomer);
+    }
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Add customer</Button>
+        <Button variant={"outline"}>{isForEdit ? "Edit" : "Add customer"}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add a new customer</DialogTitle>
+          <DialogTitle>{isForEdit ? "Edit customer" : "Add a new customer"}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
@@ -96,7 +107,7 @@ export const AddCustomerButton = (props: AddCustomerButtonProps) => {
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={handleSubmit}>{isPending ? "Creating..." : "Create"}</Button>
+          {isForEdit ? <Button onClick={handleSubmit}>{isPendingUpdate ? "Updating..." : "Update"}</Button> : <Button onClick={handleSubmit}>{isPendingCreation ? "Creating..." : "Create"}</Button>}
         </DialogFooter>
       </DialogContent>
     </Dialog>
