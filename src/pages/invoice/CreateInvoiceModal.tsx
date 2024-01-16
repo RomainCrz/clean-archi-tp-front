@@ -54,7 +54,9 @@ export const CreateInvoiceModal = (props: CreateInvoiceModalProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant={"outline"}>Create invoice</Button>
+        <Button variant={"outline"} className="w-36">
+          Create invoice
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[700px]">
         <DialogHeader>

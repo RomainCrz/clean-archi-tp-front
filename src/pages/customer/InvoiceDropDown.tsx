@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup } from "@/components/ui/dropdown-menu";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { Customer } from "schema/customerSchema";
 import { CreateInvoiceModal } from "../invoice/CreateInvoiceModal";
+import { AllCustomerInvoice } from "../invoice/AllCustomerInvoice";
 
 export type InvoiceDropDownProps = {
   customer: Customer;
@@ -15,10 +16,10 @@ export const InvoiceDropDown = (props: InvoiceDropDownProps) => {
       <DropdownMenuTrigger asChild>
         <Button variant="outline">Invoices</Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent className="w-40 flex justify-center">
         <DropdownMenuGroup>
           <CreateInvoiceModal customer={customer} />
-          <DropdownMenuItem>See Invoices</DropdownMenuItem>
+          <AllCustomerInvoice customer={customer} />
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
