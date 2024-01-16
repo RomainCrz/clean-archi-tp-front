@@ -1,16 +1,32 @@
 import { TableCaption, TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from "@/components/ui/table";
 import { Invoice } from "schema/invoiceSchema";
+import { StatusCombo } from "./components/StatusCombo";
+import React from "react";
 
 export type CustomerInvoiceTableProps = {
   invoices: Invoice[];
+  setNewInvoices: React.Dispatch<React.SetStateAction<Invoice[]>>;
 };
 
 export const CustomerInvoiceTable = (props: CustomerInvoiceTableProps) => {
-  const { invoices } = props;
+  const { invoices, setNewInvoices } = props;
 
   if (invoices.length === 0) {
     return <div>No invoices</div>;
   }
+
+  const handleChangeInvoiceStatus = (status: "draft" | "sent" | "paid" | "cancelled" | "overdue", invoiceId: string) => {
+    const newInvoices = invoices.map((invoice) => {
+      if (invoice.id === invoiceId) {
+        return {
+          ...invoice,
+          status: status,
+        };
+      }
+      return invoice;
+    });
+    setNewInvoices(newInvoices);
+  };
 
   return (
     <Table>
@@ -29,9 +45,11 @@ export const CustomerInvoiceTable = (props: CustomerInvoiceTableProps) => {
           <TableRow key={invoice.id}>
             <TableCell className="font-medium text-center">{invoice.invoiceNumber}</TableCell>
             <TableCell className="text-center">{invoice.totalAmountWithTax}</TableCell>
-            <TableCell className="text-center">{invoice.invoiceDate.toISOString()}</TableCell>
-            <TableCell className="text-center">{invoice.dueDate.toISOString()}</TableCell>
-            <TableCell className="text-center">{invoice.status}</TableCell>
+            <TableCell className="text-center">{invoice.invoiceDate.toISOString().split("T")[0]}</TableCell>
+            <TableCell className="text-center">{invoice.dueDate.toISOString().split("T")[0]}</TableCell>
+            <TableCell className="text-center">
+              <StatusCombo initialValue={invoice.status} invoiceId={invoice.id || ""} onChange={handleChangeInvoiceStatus} />
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

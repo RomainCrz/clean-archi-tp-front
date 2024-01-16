@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { useQuery } from "@tanstack/react-query";
 import { Customer } from "schema/customerSchema";
 import { useGetAllProducts } from "./hooks/useGetAllProducts";
-import { ProductsCombo } from "./ProductsCombo";
+import { ProductsCombo } from "./components/ProductsCombo";
 import { Product } from "schema/productSchema";
 import React from "react";
 import { InvoiceProductsTable } from "./InvoiceProductsTable";
