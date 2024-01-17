@@ -6,6 +6,8 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { CustomerInvoiceTable } from "./CustomerInvoiceTable";
 import { Invoice } from "schema/invoiceSchema";
 import React from "react";
+import { toast } from "sonner";
+import { useUpdateCustomerInvoices } from "./hooks/useUpdateCustomerInvoice";
 
 export type AllCustomerInvoiceProps = {
   customer: Customer;
@@ -17,6 +19,16 @@ export const AllCustomerInvoice = (props: AllCustomerInvoiceProps) => {
   const [newInvoices, setNewInvoices] = React.useState<Invoice[]>([]);
 
   const { data, isLoading, isError } = useGetAllInvoiceByUser(customer.id || "");
+  const { mutate, isPending } = useUpdateCustomerInvoices(customer.id || "");
+
+  const handleSaveChanges = () => {
+    if (newInvoices.length === 0) {
+      toast.info("No changes to save");
+      return;
+    }
+
+    mutate(newInvoices);
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -39,7 +51,7 @@ export const AllCustomerInvoice = (props: AllCustomerInvoiceProps) => {
         </DialogHeader>
         <CustomerInvoiceTable invoices={data || []} setNewInvoices={setNewInvoices} />
         <DialogFooter>
-          <Button type="submit">Save changes</Button>
+          <Button onClick={handleSaveChanges}>{isPending ? "Saving ..." : "Save changes"}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
