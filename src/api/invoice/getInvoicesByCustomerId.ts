@@ -12,7 +12,8 @@ export const getInvoicesByCustomerId = async (customerId: string): Promise<Invoi
     console.log('response', response)
     
     const data = await response.json()
-    console.log('data', data)
+
+    console.log('invoiceData', data)
     const validationData = z.array(invoiceSchema).safeParse(data)
 
     if (!validationData.success) {

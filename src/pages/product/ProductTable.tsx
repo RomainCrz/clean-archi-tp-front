@@ -1,7 +1,6 @@
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
 import { getAllProduct } from "../../api/product/getAllProduct";
-import { Button } from "@/components/ui/button";
 import { DeleteButton } from "./DeleteButton";
 import { AddOrEditProductButton } from "./AddOrEditProductButton";
 

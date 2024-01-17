@@ -1,7 +1,7 @@
-import { TableCaption, TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from "@/components/ui/table";
+import { TableCaption, TableHeader, TableRow, TableHead, TableBody, Table } from "@/components/ui/table";
 import { Invoice } from "schema/invoiceSchema";
-import { StatusCombo } from "./components/StatusCombo";
 import React from "react";
+import { InvoiceRow } from "./InvoiceRow";
 
 export type CustomerInvoiceTableProps = {
   invoices: Invoice[];
@@ -14,6 +14,8 @@ export const CustomerInvoiceTable = (props: CustomerInvoiceTableProps) => {
   if (invoices.length === 0) {
     return <div>No invoices</div>;
   }
+
+  console.log("invoices", invoices);
 
   const handleChangeInvoiceStatus = (status: "draft" | "sent" | "paid" | "cancelled" | "overdue", invoiceId: string) => {
     const newInvoices = invoices.map((invoice) => {
@@ -38,19 +40,12 @@ export const CustomerInvoiceTable = (props: CustomerInvoiceTableProps) => {
           <TableHead className="text-center">Created at</TableHead>
           <TableHead className="text-center">Due date</TableHead>
           <TableHead className="text-center">Status</TableHead>
+          <TableHead className="w-[50px]"></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {invoices.map((invoice) => (
-          <TableRow key={invoice.id}>
-            <TableCell className="font-medium text-center">{invoice.invoiceNumber}</TableCell>
-            <TableCell className="text-center">{invoice.totalAmountWithTax}</TableCell>
-            <TableCell className="text-center">{invoice.invoiceDate.toISOString().split("T")[0]}</TableCell>
-            <TableCell className="text-center">{invoice.dueDate.toISOString().split("T")[0]}</TableCell>
-            <TableCell className="text-center">
-              <StatusCombo initialValue={invoice.status} invoiceId={invoice.id || ""} onChange={handleChangeInvoiceStatus} />
-            </TableCell>
-          </TableRow>
+          <InvoiceRow invoice={invoice} handleChangeInvoiceStatus={handleChangeInvoiceStatus} key={invoice.id} />
         ))}
       </TableBody>
     </Table>
