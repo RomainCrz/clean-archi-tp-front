@@ -5,36 +5,50 @@ import { Label } from "@/components/ui/label";
 import { useCreateProduct } from "./hooks/useCreateProduct";
 import { SyntheticEvent, useState } from "react";
 import { Product } from "schema/productSchema";
+import { useUpdateProduct } from "./hooks/useUpdateProduct";
 
-export const AddProductButton = () => {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState(0);
-  const [tax, setTax] = useState(0);
+type AddOrEditProductButtonProps = {
+  isForEdit: boolean;
+  product?: Product;
+};
 
-  const { mutate, isPending } = useCreateProduct();
+export const AddOrEditProductButton = ({ isForEdit, product }: AddOrEditProductButtonProps) => {
+  const [name, setName] = useState(product?.name || "");
+  const [description, setDescription] = useState(product?.description || "");
+  const [price, setPrice] = useState(product?.price || 0);
+  const [tax, setTax] = useState(product?.tax || 0);
+
+  const { mutate: creationMutate, isPending: creationPending } = useCreateProduct();
+  const { mutate: updateMutate, isPending: updatePending } = useUpdateProduct();
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
 
-    const product: Product = {
+    const newProduct: Product = {
       name,
       description,
       price,
       tax,
       baseProductId: "",
+      active: true,
     };
-    mutate(product);
+
+    if (isForEdit) {
+      newProduct.id = product?.id || "";
+      updateMutate(newProduct);
+    } else {
+      creationMutate(newProduct);
+    }
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Add product</Button>
+        <Button variant={"outline"}>{isForEdit ? "Edit product" : "Add product"}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add a new product</DialogTitle>
+          <DialogTitle>{isForEdit ? "Edit product" : "Add a new product"}</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
@@ -63,7 +77,7 @@ export const AddProductButton = () => {
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={handleSubmit}>{isPending ? "Creating..." : "Create"}</Button>
+          {isForEdit ? <Button onClick={handleSubmit}>{updatePending ? "Updating..." : "Update"}</Button> : <Button onClick={handleSubmit}>{creationPending ? "Creating..." : "Create"}</Button>}
         </DialogFooter>
       </DialogContent>
     </Dialog>

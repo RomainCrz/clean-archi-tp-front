@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllProduct } from "../../api/product/getAllProduct";
 import { Button } from "@/components/ui/button";
 import { DeleteButton } from "./DeleteButton";
+import { AddOrEditProductButton } from "./AddOrEditProductButton";
 
 export type ProductTableProps = {};
 
@@ -50,7 +51,7 @@ export const ProductTable = (props: ProductTableProps) => {
             <TableCell>{product.description}</TableCell>
             <TableCell>{product.price}</TableCell>
             <TableCell>
-              <Button>Edit product</Button>
+              <AddOrEditProductButton isForEdit={true} product={product} />
             </TableCell>
             <TableCell>
               <DeleteButton productId={product.id || ""} />

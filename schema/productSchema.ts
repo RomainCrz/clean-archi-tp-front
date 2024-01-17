@@ -6,7 +6,8 @@ export const productSchema = z.object({
     name: z.string(),
     price: z.number(),
     tax: z.number(),
-    description: z.string()
+    description: z.string(),
+    active: z.boolean()
 })
 
 export type Product = z.infer<typeof productSchema>
