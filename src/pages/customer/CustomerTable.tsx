@@ -1,9 +1,5 @@
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useQuery } from "@tanstack/react-query";
-import { getAllCustomer } from "../../api/customer/getAllCustomer";
-import { Button } from "@/components/ui/button";
 import { DeleteButton } from "./DeleteButton";
-import { CreateInvoiceModal } from "../invoice/CreateInvoiceModal";
 import { InvoiceDropDown } from "./InvoiceDropDown";
 import { AddOrUpdateCustomerButton } from "./AddOrUpdateCustomerButton";
 import { useGetAllCustomers } from "./hooks/useGetAllCustomers";
