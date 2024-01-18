@@ -4,10 +4,11 @@ import { useGetAllInvoiceByUser } from "../hooks/useGetAllInvoiceByUser";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { CustomerInvoiceTable } from "../CustomerInvoiceTable";
-import { Invoice } from "schema/invoiceSchema";
+import { Invoice, invoiceSchema } from "schema/invoiceSchema";
 import React from "react";
 import { toast } from "sonner";
 import { useUpdateCustomerInvoices } from "../hooks/useUpdateCustomerInvoice";
+import { z } from "zod";
 
 export type AllCustomerInvoiceProps = {
   customer: Customer;
@@ -24,6 +25,11 @@ export const AllCustomerInvoice = (props: AllCustomerInvoiceProps) => {
   const handleSaveChanges = () => {
     if (newInvoices.length === 0) {
       toast.info("No changes to save");
+      return;
+    }
+
+    if (z.array(invoiceSchema).safeParse(newInvoices).success === false) {
+      toast.error("Please fill all the fields");
       return;
     }
 

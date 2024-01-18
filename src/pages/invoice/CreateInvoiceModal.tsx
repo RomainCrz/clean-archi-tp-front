@@ -1,7 +1,5 @@
-import { getAllProduct } from "@/api/product/getAllProduct";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { useQuery } from "@tanstack/react-query";
 import { Customer } from "schema/customerSchema";
 import { useGetAllProducts } from "./hooks/useGetAllProducts";
 import { ProductsCombo } from "./components/ProductsCombo";
@@ -9,7 +7,8 @@ import { Product } from "schema/productSchema";
 import React from "react";
 import { InvoiceProductsTable } from "./InvoiceProductsTable";
 import { useCreateInvoice } from "./hooks/useCreateInvoice";
-import { Invoice } from "schema/invoiceSchema";
+import { Invoice, invoiceSchema } from "../../../schema/invoiceSchema";
+import { toast } from "sonner";
 
 export type CreateInvoiceModalProps = {
   customer: Customer;
@@ -47,6 +46,11 @@ export const CreateInvoiceModal = (props: CreateInvoiceModalProps) => {
       totalTax: totalTax,
       totalAmountWithTax: totalAmount + totalTax,
     };
+
+    if (invoiceSchema.safeParse(invoice).success === false) {
+      toast.error("Please fill all the fields");
+      return;
+    }
 
     mutate(invoice);
   };

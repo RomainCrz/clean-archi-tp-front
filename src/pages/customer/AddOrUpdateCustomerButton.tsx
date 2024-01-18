@@ -4,8 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCreateCustomer } from "./hooks/useCreateCustomer";
 import { SyntheticEvent, useState } from "react";
-import { Customer } from "schema/customerSchema";
+import { Customer, customerSchema } from "../../../schema/customerSchema";
 import { useUpdateCustomer } from "./hooks/useUpdateCustomer";
+import { toast } from "sonner";
 
 export type AddCustomerButtonProps = {
   isForEdit: boolean;
@@ -38,6 +39,11 @@ export const AddOrUpdateCustomerButton = ({ isForEdit, customer }: AddCustomerBu
       country,
       zip,
     };
+
+    if (customerSchema.safeParse(newCustomer).success === false) {
+      toast.error("Please fill all the fields");
+      return;
+    }
 
     if (isForEdit) {
       newCustomer.id = customer?.id || "";

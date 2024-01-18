@@ -4,8 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCreateProduct } from "./hooks/useCreateProduct";
 import { SyntheticEvent, useState } from "react";
-import { Product } from "schema/productSchema";
+import { Product, productSchema } from "../../../schema/productSchema";
 import { useUpdateProduct } from "./hooks/useUpdateProduct";
+import { toast } from "sonner";
 
 type AddOrEditProductButtonProps = {
   isForEdit: boolean;
@@ -32,6 +33,11 @@ export const AddOrEditProductButton = ({ isForEdit, product }: AddOrEditProductB
       baseProductId: "",
       active: true,
     };
+
+    if (productSchema.safeParse(newProduct).success === false) {
+      toast.error("Please fill all the fields");
+      return;
+    }
 
     if (isForEdit) {
       newProduct.id = product?.id || "";
