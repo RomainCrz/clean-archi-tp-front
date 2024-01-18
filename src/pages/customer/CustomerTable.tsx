@@ -6,21 +6,12 @@ import { DeleteButton } from "./DeleteButton";
 import { CreateInvoiceModal } from "../invoice/CreateInvoiceModal";
 import { InvoiceDropDown } from "./InvoiceDropDown";
 import { AddOrUpdateCustomerButton } from "./AddOrUpdateCustomerButton";
+import { useGetAllCustomers } from "./hooks/useGetAllCustomers";
 
 export type CustomerTableProps = {};
 
-export const CustomerTable = (props: CustomerTableProps) => {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["all-customers"],
-    queryFn: async () => {
-      try {
-        const customers = await getAllCustomer();
-        return customers;
-      } catch (error) {
-        throw error;
-      }
-    },
-  });
+export const CustomerTable = () => {
+  const { data, isLoading, isError } = useGetAllCustomers();
 
   if (isLoading) {
     return <div>Loading...</div>;

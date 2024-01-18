@@ -1,23 +1,12 @@
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useQuery } from "@tanstack/react-query";
-import { getAllProduct } from "../../api/product/getAllProduct";
 import { DeleteButton } from "./DeleteButton";
 import { AddOrEditProductButton } from "./AddOrEditProductButton";
+import { useGetAllProducts } from "./hooks/useGetAllProducts";
 
 export type ProductTableProps = {};
 
-export const ProductTable = (props: ProductTableProps) => {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["all-products"],
-    queryFn: async () => {
-      try {
-        const products = await getAllProduct();
-        return products;
-      } catch (error) {
-        throw error;
-      }
-    },
-  });
+export const ProductTable = () => {
+  const { data, isLoading, isError } = useGetAllProducts();
 
   if (isLoading) {
     return <div>Loading...</div>;

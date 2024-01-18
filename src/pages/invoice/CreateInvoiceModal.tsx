@@ -18,7 +18,7 @@ export const CreateInvoiceModal = (props: CreateInvoiceModalProps) => {
   const { customer } = props;
 
   const { data, isLoading, isError } = useGetAllProducts();
-  const { mutate, isPending } = useCreateInvoice();
+  const { mutate, isPending } = useCreateInvoice(customer.id || "");
 
   const [invoiceProducts, setInvoiceProducts] = React.useState<Product[]>([]);
 
